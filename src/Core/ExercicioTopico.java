@@ -14,20 +14,13 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class ExercicioTopico implements Navegavel {
-    // Título do tópico estudado
     private String tituloTopico;
-    // Lista de questões do tópico
     private ArrayList<Questao> questoes;
-    // Índice da questão atual
     private int indiceAtual;
-    // Modo de ordenação das questões (embaralhadas, crescente, decrescente)
     private String modoOrdenacao;
-    // Estatísticas do usuário para registrar desempenho
     private Estatisticas estatisticasUsuario;
-    // Histórico de navegação para voltar questões
     private Stack<Integer> historicoNavegacao;
 
-    // Construtor: inicializa o tópico, estatísticas e variáveis de controle
     public ExercicioTopico(String titulo, Estatisticas estatisticas) {
         this.tituloTopico = titulo;
         this.questoes = new ArrayList<>();

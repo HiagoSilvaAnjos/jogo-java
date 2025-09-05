@@ -133,7 +133,6 @@ public class QuestaoFactory {
         }
     }
 
-    // Implementações similares para outros tópicos (simplificadas)
     private static ArrayList<Questao> criarQuestoesHeranca() throws QuestaoException {
         ArrayList<Questao> questoes = new ArrayList<>();
         // Implementação similar ao encapsulamento
