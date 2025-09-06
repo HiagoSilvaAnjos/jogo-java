@@ -12,7 +12,6 @@ import Questoes.QuestaoCompletarCodigo;
 import Questoes.QuestaoFactory;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ExercicioTopico implements Navegavel {
     private String tituloTopico;
@@ -20,7 +19,7 @@ public class ExercicioTopico implements Navegavel {
     private int indiceAtual;
     private String modoOrdenacao;
     private Estatisticas estatisticasUsuario;
-    private Stack<Integer> historicoNavegacao;
+    private Pilha historicoNavegacao;
 
     public ExercicioTopico(String titulo, Estatisticas estatisticas) {
         this.tituloTopico = titulo;
@@ -28,7 +27,7 @@ public class ExercicioTopico implements Navegavel {
         this.indiceAtual = 0;
         this.modoOrdenacao = "embaralhadas";
         this.estatisticasUsuario = estatisticas;
-        this.historicoNavegacao = new Stack<>();
+        this.historicoNavegacao = new Pilha();
     }
 
     // Carrega as questões do tópico usando a fábrica de questões
@@ -60,7 +59,7 @@ public class ExercicioTopico implements Navegavel {
             throw new NavegacaoException("Não há próxima questão disponível.");
         }
 
-        historicoNavegacao.push(indiceAtual);
+        historicoNavegacao.empilhar(indiceAtual);
         indiceAtual++;
     }
 
@@ -71,8 +70,8 @@ public class ExercicioTopico implements Navegavel {
             throw new NavegacaoException("Não há questão anterior disponível.");
         }
 
-        if (!historicoNavegacao.isEmpty()) {
-            indiceAtual = historicoNavegacao.pop();
+        if (!historicoNavegacao.estaVazia()) {
+            indiceAtual = historicoNavegacao.desempilhar();
         } else {
             indiceAtual--;
         }
@@ -83,7 +82,7 @@ public class ExercicioTopico implements Navegavel {
     public void irParaMenu() throws NavegacaoException {
         // Reset do exercício para voltar ao menu
         indiceAtual = 0;
-        historicoNavegacao.clear();
+        historicoNavegacao.limpar();
     }
 
     // Processa a resposta do usuário para a questão atual
