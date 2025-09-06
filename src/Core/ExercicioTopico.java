@@ -8,6 +8,7 @@ package Core;
 import Exceptions.NavegacaoException;
 import Exceptions.QuestaoException;
 import Questoes.Questao;
+import Questoes.QuestaoCompletarCodigo;
 import Questoes.QuestaoFactory;
 
 import java.util.ArrayList;
@@ -97,6 +98,9 @@ public class ExercicioTopico implements Navegavel {
             } else {
                 estatisticasUsuario.registrarErro();
                 System.out.println("\n❌ INCORRETO!");
+                if (questaoAtual instanceof QuestaoCompletarCodigo) {
+                    System.out.println(((QuestaoCompletarCodigo) questaoAtual).getDica());
+                }
                 System.out.println("Resposta correta: " + questaoAtual.getCorreta());
                 System.out.println("Explicação: " + questaoAtual.getExplicacao());
             }
@@ -169,6 +173,4 @@ public class ExercicioTopico implements Navegavel {
 
     // Getters
     public String getTituloTopico() { return tituloTopico; }
-    public int getIndiceAtual() { return indiceAtual; }
-    public int getTotalQuestoes() { return questoes.size(); }
 }

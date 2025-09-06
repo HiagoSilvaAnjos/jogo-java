@@ -1,3 +1,10 @@
+// =============================================
+// Classe SistemaAprendizado
+// Gerencia o fluxo principal do sistema
+// Controla menus, navegação e interação com usuário
+// Coordena exercícios e exibe estatísticas
+// =============================================
+
 import Core.ExercicioTopico;
 import Core.Usuario;
 import Exceptions.NavegacaoException;
@@ -55,17 +62,22 @@ public class SistemaAprendizado {
 
     // Menu principal
     public void mostrarMenuPrincipal() throws NavegacaoException {
+        if (!usuario.getEstatisticas().isSessaoAtiva()) {
+            usuario.getEstatisticas().iniciar();
+        }
         System.out.println("\n" + "=".repeat(60));
         System.out.println("  SISTEMA DE APRENDIZADO DE PROGRAMAÇÃO v" + VERSAO_SISTEMA);
-        System.out.println("  Usuário: " + usuario.getNome() + " | Sessão: " + usuario.getEstatisticas().calcularTempoSessao() + "s");
+        System.out.println("  Usuário: " + usuario.getNome() + " | Tempo: " + usuario.getEstatisticas().getTempoSessaoFormatado());
+        System.out.println(usuario.getEstatisticas().getEstatisticasResumo());
         System.out.println("=".repeat(60));
         System.out.println("Olá, " + usuario.getNome() + "! O que deseja fazer hoje?");
         System.out.println();
         System.out.println("1. 📚 Aprender Java (POO)");
         System.out.println("2. 📊 Consultar Estatísticas");
-        System.out.println("3. 🚪 Sair do Sistema");
+        System.out.println("3. 🔄 Reiniciar Progresso");
+        System.out.println("4. 🚪 Sair do Sistema");
         System.out.println();
-        System.out.print("Escolha uma opção (1-3): ");
+        System.out.print("Escolha uma opção (1-4): ");
 
         try {
             int opcao = scanner.nextInt();
@@ -78,10 +90,13 @@ public class SistemaAprendizado {
                     mostrarEstatisticas();
                     break;
                 case 3:
+                    resetarProgresso();
+                    break;
+                case 4:
                     executando = false;
                     break;
                 default:
-                    System.out.println("❌ Opção inválida! Escolha entre 1-3.");
+                    System.out.println("❌ Opção inválida! Escolha entre 1-4.");
             }
         } catch (InputMismatchException e) {
             System.out.println("❌ Digite apenas números!");
@@ -126,6 +141,9 @@ public class SistemaAprendizado {
 
     // Inicia exercícios do tópico escolhido
     private void iniciarExercicioTopico(String topico) {
+        if (!usuario.getEstatisticas().isSessaoAtiva()) {
+            usuario.getEstatisticas().iniciar();
+        }
         try {
             usuario.getEstatisticas().adicionarTopicoEstudado(topico); // Marca o tópico
             ExercicioTopico exercicio = new ExercicioTopico(topico, usuario.getEstatisticas());
@@ -193,6 +211,7 @@ public class SistemaAprendizado {
                 System.out.println("   'P' ou 'PULAR' - Pular questão atual");
             }
             System.out.println("   'M' ou 'MENU' - Voltar ao menu");
+            System.out.println("\nProgresso da sessão: " + usuario.getEstatisticas().getEstatisticasResumo());
             System.out.print("\nSua escolha: ");
 
             String entrada = scanner.nextLine().trim().toUpperCase();
@@ -284,9 +303,19 @@ public class SistemaAprendizado {
             System.out.println("❌ Erro na questão: " + e.getMessage());
         } else {
             System.out.println("❌ Erro inesperado: " + e.getMessage());
-            e.printStackTrace();
         }
         System.out.print("Pressione ENTER para continuar...");
+        scanner.nextLine();
+    }
+
+    private void resetarProgresso() {
+        System.out.print("\n⚠️ Tem certeza que deseja reiniciar todo o progresso? (S/N): ");
+        String confirmacao = scanner.nextLine().trim().toUpperCase();
+        if (confirmacao.equals("S")) {
+            usuario.getEstatisticas().resetarEstatisticas();
+            System.out.println("\n✅ Progresso reiniciado com sucesso!");
+        }
+        System.out.print("\nPressione ENTER para continuar...");
         scanner.nextLine();
     }
 }
